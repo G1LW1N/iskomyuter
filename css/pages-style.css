@@ -1,0 +1,357 @@
+/* Pages Style - For FAQs, Contact, Privacy, Terms */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f5f7fa;
+    min-height: 100vh;
+}
+
+/* Page Header */
+.page-header {
+    min-height: 30vh;
+    width: 100%;
+    background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),
+                      url(https://media.istockphoto.com/photos/cross-roads-manila-picture-id172192324?k=6&m=172192324&s=612x612&w=0&h=WJQycnDiLjNry-Gq3cu6OnG7LRn4pDcetK1_QTm3QU4=);
+    background-position: center;
+    background-size: cover;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.page-header nav {
+    display: flex;
+    padding: 2% 6%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-header nav img {
+    width: 80px;
+}
+
+.nav-links {
+    flex: 1;
+    text-align: right;
+}
+
+.nav-links ul {
+    display: flex;
+    justify-content: flex-end;
+    gap: 30px;
+    list-style: none;
+}
+
+.nav-links ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s;
+    padding: 8px 16px;
+    border-radius: 5px;
+}
+
+.nav-links ul li a:hover,
+.nav-links ul li.log a {
+    background: #f44336;
+}
+
+/* Page Title */
+.page-title {
+    text-align: center;
+    padding: 40px 20px;
+    color: white;
+}
+
+.page-title h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.page-title p {
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+/* Container */
+.container {
+    max-width: 1000px;
+    margin: -50px auto 60px;
+    background-color: #fff;
+    padding: 50px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Typography */
+h2 {
+    color: #1a237e;
+    font-size: 28px;
+    margin: 30px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #f44336;
+    display: inline-block;
+}
+
+h3 {
+    color: #333;
+    font-size: 20px;
+    margin: 20px 0 10px;
+}
+
+p {
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 16px;
+    font-size: 15px;
+}
+
+ul {
+    margin: 15px 0 15px 20px;
+    line-height: 1.8;
+}
+
+li {
+    color: #555;
+    margin-bottom: 8px;
+}
+
+a {
+    color: #f44336;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #d32f2f;
+    text-decoration: underline;
+}
+
+/* FAQ Specific Styles */
+.qa-section {
+    margin-top: 30px;
+}
+
+.faq-item {
+    margin-bottom: 25px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.faq-item:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.question {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    padding: 20px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.question:hover {
+    opacity: 0.9;
+}
+
+.answer {
+    padding: 25px;
+    background: #f9f9f9;
+    border-top: 2px solid #e0e0e0;
+}
+
+/* Contact Form Styles */
+.contact-form {
+    background: #f9f9f9;
+    padding: 40px;
+    border-radius: 10px;
+    margin-top: 30px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* Alert Messages */
+.alert {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.alert-success {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.alert-error {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+/* Contact Info Section */
+.contact-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin: 40px 0;
+}
+
+.info-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    transition: transform 0.3s;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+}
+
+.info-card i {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.info-card h3 {
+    color: white;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.info-card p {
+    color: rgba(255,255,255,0.9);
+    font-size: 14px;
+}
+
+/* Scroll to Top Button */
+#scrollToTop {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#scrollToTop.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+#scrollToTop:hover {
+    background: #d32f2f;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(244, 67, 54, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .page-title h1 {
+        font-size: 36px;
+    }
+
+    .container {
+        margin: -30px 20px 40px;
+        padding: 30px 20px;
+    }
+
+    .nav-links ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .page-header nav {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .contact-form {
+        padding: 25px;
+    }
+}

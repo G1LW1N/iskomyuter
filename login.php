@@ -85,38 +85,36 @@ if (isset($_POST["login"])) {
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="scroll-behavior: smooth;">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login - Iskomyuter.ph">
     <title>Login - Iskomyuter.ph</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/blog.css">
     <link rel="stylesheet" href="css/login-style.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
     <section class="login-header">
-        <nav>
-            <a href="FirstPage.php"> <img src="images/iskomyuter.png" alt="Iskomyuter Logo"></a>
-
-            <div class="nav-links">
-                <i class='bx bx-menu-alt-right'></i>
-                <ul>
-                    <li><a href="FirstPage.php">Home</a></li>
-                    <li><a href="map.php">Map</a></li>
-                    <li><a href="FirstPage.php#about">About Us</a></li>
-                    <li><a href="FirstPage.php#blog">Blog Post</a></li>
-                    <li><a href="FirstPage.php#contact">Contacts</a></li>
-                    <li class="log active"><a href="login.php">Log in</a></li>
-                </ul>
-            </div>
-        </nav>
+        <div class="auth-nav">
+            <a href="FirstPage.php" class="logo-link">
+                <img src="images/iskomyuter.png" alt="Iskomyuter Logo">
+            </a>
+            <a href="FirstPage.php" class="back-home">
+                <i class='bx bx-home-alt'></i>
+                <span>Back to Home</span>
+            </a>
+        </div>
 
         <div class="login-container">
             <div class="wrapper">
                 <form action="login.php" method="post" autocomplete="off">
-                    <h1>Welcome Back!</h1>
+                    <h1>Welcome Isko!</h1>
                     <p class="subtitle">Login to continue your journey</p>
                     
                     <div class="input-box">
@@ -138,6 +136,31 @@ if (isset($_POST["login"])) {
             </div>
         </div>
     </section>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTop" onclick="scrollToTop()">
+        <i class='bx bx-chevron-up'></i>
+    </button>
+
+    <script>
+        // Show/hide scroll to top button
+        window.addEventListener('scroll', function() {
+            const scrollBtn = document.getElementById('scrollToTop');
+            if (window.pageYOffset > 300) {
+                scrollBtn.classList.add('show');
+            } else {
+                scrollBtn.classList.remove('show');
+            }
+        });
+
+        // Smooth scroll to top
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
 </body>
 </html>
 

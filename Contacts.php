@@ -45,118 +45,45 @@ function validate($data) {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="scroll-behavior: smooth;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
-    <!-- Add your CSS and other meta tags here -->
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            margin-bottom: 8px;
-            color: #555;
-        }
-
-        input,
-        textarea {
-            padding: 10px;
-            margin-bottom: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        button {
-            background-color: #550f15;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #c6d400;
-        }
-
-        .social-links {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .social-links a {
-            display: inline-block;
-            text-decoration: none;
-            color: #fff;
-            padding: 10px;
-            margin: 0 10px;
-            border-radius: 5px;
-        }
-
-        .facebook {
-            background-color: #3b5998;
-        }
-
-        .instagram {
-            background-color: #e4405f;
-        }
-
-        .google {
-            background-color: #027508;
-        }
-
-        .alert {
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-        }
-
-        .alert-danger {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-    </style>
+    <meta name="description" content="Contact Us - Iskomyuter.ph">
+    <title>Contact Us - Iskomyuter.ph</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/pages-style.css">
 </head>
 <body>
+    <section class="page-header">
+        <nav class="nav">
+            <a href="FirstPage.php"><img src="images/iskomyuter.png" alt="Iskomyuter Logo"></a>
+            <div class="nav-links">
+                <ul>
+                    <li><a href="FirstPage.php">HOME</a></li>
+                    <li><a href="map.php">MAP</a></li>
+                    <li><a href="FirstPage.php#blog">BLOG</a></li>
+                    <li><a href="FirstPage.php#about">ABOUT US</a></li>
+                    <li><a href="FirstPage.php#footer">CONTACT</a></li>
+                    <li class="log"><a href="login.php">Log in</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="page-title">
+            <h1>Contact Us</h1>
+            <p>Get in touch with the Iskomyuter team</p>
+        </div>
+    </section>
 
     <div class="container">
-        <h2>Contact Us</h2>
         <?php
         // Display error message if set
         if (isset($_SESSION['error_message'])) {
-            echo '<div class="alert alert-danger">' . $_SESSION['error_message'] . '</div>';
+            echo '<div class="alert alert-error">' . $_SESSION['error_message'] . '</div>';
             unset($_SESSION['error_message']);
         }
 
@@ -166,34 +93,78 @@ function validate($data) {
             unset($_SESSION['success_message']);
         }
         ?>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" id="contactForm">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+        <div class="contact-info">
+            <div class="info-card">
+                <i class='bx bx-map'></i>
+                <h3>Address</h3>
+                <p>Metro Manila<br>Philippines</p>
+            </div>
+            <div class="info-card">
+                <i class='bx bx-envelope'></i>
+                <h3>Email</h3>
+                <p>info@iskomyuter.ph</p>
+            </div>
+            <div class="info-card">
+                <i class='bx bx-phone'></i>
+                <h3>Phone</h3>
+                <p>+63 (2) 1234-5678</p>
+            </div>
+        </div>
 
-            <label for="message">Message:</label>
-            <textarea id="message" name="message" rows="4" required></textarea>
+        <div class="contact-form">
+            <h2>Send us a Message</h2>
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" id="contactForm">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                </div>
 
-            <button type="submit" name="submit">Submit</button>
-        </form>
+                <div class="form-group">
+                    <label for="email">Your Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
 
-      
-        <div class="social-links">
-            <a href="https://www.facebook.com/iskomyuter.manila?mibextid=2JQ9oc" class="facebook" target="_blank">Facebook</a>
-            <a href="https://www.instagram.com/iskomyuter_manila2024/?fbclid=IwAR1dnz6XzRhLSTQeM2NOLU8brBRA7AvMr2m7295kVzOQEqYOioW9nSsqXEw" class="instagram" target="_blank">Instagram</a>
-            <a href="FirstPage.php" class="google" target="_blank">Go back</a>
+                <div class="form-group">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" name="message" placeholder="Write your message here..." required></textarea>
+                </div>
+
+                <button type="submit" name="submit" class="submit-btn">Send Message</button>
+            </form>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <h3 style="color: #1a237e; margin-bottom: 20px;">Follow Us</h3>
+            <div class="social-links" style="display: flex; justify-content: center; gap: 20px;">
+                <a href="https://www.facebook.com/iskomyuter.manila?mibextid=2JQ9oc" target="_blank" style="color: #3b5998; font-size: 40px;"><i class='bx bxl-facebook-circle'></i></a>
+                <a href="https://www.instagram.com/iskomyuter_manila2024/" target="_blank" style="color: #e4405f; font-size: 40px;"><i class='bx bxl-instagram-alt'></i></a>
+            </div>
         </div>
     </div>
 
-    </div>
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTop" onclick="scrollToTop()">
+        <i class='bx bx-chevron-up'></i>
+    </button>
 
- 
     <script>
-        function submitForm() {
-            
-            alert('Thank You for Contacting Iskomyuter');
+        // Show/hide scroll to top button
+        window.addEventListener('scroll', function() {
+            const scrollBtn = document.getElementById('scrollToTop');
+            if (window.pageYOffset > 300) {
+                scrollBtn.classList.add('show');
+            } else {
+                scrollBtn.classList.remove('show');
+            }
+        });
+
+        // Smooth scroll to top
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         }
     </script>
 

@@ -8,7 +8,8 @@
 .register-header {
     min-height: 100vh;
     width: 100%;
-    background-image: linear-gradient(rgba(78, 79, 83, 0.7), rgba(4, 9, 30, 0.7)), url('../images/loginbg.jpg');
+    background-image: linear-gradient(rgba(4,9,30,0.7),rgba(4,9,30,0.7)),
+                      url(https://media.istockphoto.com/photos/cross-roads-manila-picture-id172192324?k=6&m=172192324&s=612x612&w=0&h=WJQycnDiLjNry-Gq3cu6OnG7LRn4pDcetK1_QTm3QU4=);
     background-position: center;
     background-size: cover;
     position: relative;
@@ -22,7 +23,7 @@
 }
 
 .register-header nav img {
-    width: 85px;
+    width: 80px;
 }
 
 .register-header .nav-links {
@@ -30,31 +31,73 @@
     text-align: right;
 }
 
+.register-header .nav-links ul {
+    display: flex;
+    justify-content: flex-end;
+    gap: 30px;
+}
+
 .register-header .nav-links ul li {
     list-style: none;
-    display: inline-block;
-    padding: 8px 12px;
-    position: relative;
 }
 
 .register-header .nav-links ul li a {
     color: white;
     text-decoration: none;
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s;
+    padding: 8px 16px;
+    border-radius: 5px;
 }
 
-.register-header .nav-links ul li::after {
-    content: '';
-    width: 0%;
-    height: 2px;
+.register-header .nav-links ul li a:hover,
+.register-header .nav-links ul li.log a {
     background: #f44336;
-    display: block;
-    margin: auto;
-    transition: 0.5s;
 }
 
-.register-header .nav-links ul li:hover::after {
-    width: 100%;
+/* Auth Navigation */
+.auth-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2% 6%;
+}
+
+.auth-nav .logo-link img {
+    width: 80px;
+    transition: transform 0.3s ease;
+}
+
+.auth-nav .logo-link:hover img {
+    transform: scale(1.05);
+}
+
+.auth-nav .back-home {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.auth-nav .back-home:hover {
+    background: #f44336;
+    border-color: #f44336;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+}
+
+.auth-nav .back-home i {
+    font-size: 18px;
 }
 
 .register-container {
@@ -224,4 +267,38 @@
     .wrapper .input-box {
         margin: 15px 0;
     }
+}
+
+/* Scroll to Top Button */
+#scrollToTop {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#scrollToTop.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+#scrollToTop:hover {
+    background: #d32f2f;
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(244, 67, 54, 0.6);
 }
