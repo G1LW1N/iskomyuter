@@ -280,6 +280,9 @@ body {
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    background: #e0e0e0;
+    position: relative;
+    z-index: 1;
 }
 
 /* Route Output */
@@ -293,6 +296,78 @@ body {
 
 .route-output:empty {
     display: none;
+}
+
+/* Route Details Styling */
+.route-details {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.route-details h4 {
+    color: #1a237e;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.route-details p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.route-details strong {
+    color: #1a237e;
+    font-weight: 600;
+}
+
+.calculating {
+    text-align: center;
+    padding: 20px;
+    color: #1a237e;
+    font-weight: 500;
+}
+
+.btn-save {
+    margin-top: 20px;
+    padding: 12px 30px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-save:hover {
+    background: #218838;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+}
+
+/* Leaflet Routing Machine Customization */
+.leaflet-routing-container {
+    display: none !important;
+}
+
+.leaflet-routing-container-hide {
+    display: none !important;
+}
+
+.leaflet-control-geocoder {
+    display: none;
+}
+
+/* Ensure the route line is visible */
+.leaflet-routing-container ~ .leaflet-overlay-pane {
+    display: block !important;
 }
 
 /* Responsive Design */

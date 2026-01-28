@@ -1,4 +1,10 @@
+<?php
+session_start();
 
+// Initialize user variables
+$user = isset($_SESSION["user"]) ? $_SESSION["user"] : "";
+$userid = isset($_SESSION["id"]) ? $_SESSION["id"] : "";
+?>
 <!DOCTYPE html>
 <html lang="en" style="scroll-behavior: smooth;">
 
@@ -15,6 +21,13 @@
     <link rel="stylesheet" href="css/blog.css">
     <link rel="stylesheet" href="css/projectstyle.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet Routing Machine CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <!-- Leaflet Control Geocoder CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 </head>
 
 <body>
@@ -71,7 +84,7 @@
                                 <input type="radio" name="transportation" value="driving" checked>
                                 <span class="option-content">
                                     <i class='bx bx-car'></i>
-                                    <span>Motorcycle / Taxi / Car</span>
+                                    <span>Taxi / Car</span>
                                 </span>
                             </label>
                             <label class="transport-option">
@@ -85,7 +98,7 @@
                                 <input type="radio" name="transportation" value="jeepney">
                                 <span class="option-content">
                                     <i class='bx bx-train'></i>
-                                    <span>LRT / MRT / PNR</span>
+                                    <span>Train</span>
                                 </span>
                             </label>
                         </div>
@@ -136,7 +149,13 @@
         }
     </script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXSCzvgYFfLATJ2hA4suvBnhHyOcSjTnQ"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Leaflet Routing Machine JS -->
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    <!-- Leaflet Control Geocoder JS -->
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-rbs5n513fCq6QmA9z8JDL8pG1LdhgLz5w5t8xvYU6/DfOMAv/9iVbp4Pa9dHbIZ5"
         crossorigin="anonymous"></script>

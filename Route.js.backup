@@ -1,0 +1,278 @@
+var map;
+var routingControl;
+var routePolyline;
+var startMarker;
+var endMarker;
+var getUser = "";
+var getUserId = "";
+var getDistanceinkms = 0;
+var getFare = 0;
+var gerRouteId = 0;
+var getTransportMode = '';
+var getDuration = '';
+
+window.onload = function () {
+    // Safely get user values
+    var userElement = document.getElementById('user');
+    var userIdElement = document.getElementById('userid');
+    
+    if (userElement) getUser = userElement.value;
+    if (userIdElement) getUserId = userIdElement.value;
+    
+    // Initialize map centered on Manila, Philippines
+    map = L.map('googleMap').setView([14.6760, 121.0437], 12);
+
+    // Add OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19
+    }).addTo(map);
+
+    console.log('Map initialized successfully');
+};
+
+function calcRoute() {
+    console.log('calcRoute called');
+    
+    var fromInput = document.getElementById('from').value;
+    var toInput = document.getElementById('to').value;
+    var selectedTransportation = document.querySelector('input[name="transportation"]:checked').value;
+
+    console.log('From:', fromInput);
+    console.log('To:', toInput);
+    console.log('Transport:', selectedTransportation);
+
+    if (!fromInput || !toInput) {
+        alert('Please enter both starting location and destination');
+        return;
+    }
+
+    getTransportMode = selectedTransportation;
+
+    // Clear existing routes and markers
+    if (routingControl) {
+        map.removeControl(routingControl);
+        routingControl = null;
+    }
+    if (routePolyline) {
+        map.removeLayer(routePolyline);
+        routePolyline = null;
+    }
+    if (startMarker) {
+        map.removeLayer(startMarker);
+        startMarker = null;
+    }
+    if (endMarker) {
+        map.removeLayer(endMarker);
+        endMarker = null;
+    }
+
+    // Clear the output panel
+    var outputPanel = document.getElementById('output');
+    outputPanel.innerHTML = '<div class="calculating">Calculating route...</div>';
+
+    console.log('Starting geocoding...');
+
+    // Geocode the addresses
+    var geocoder = L.Control.Geocoder.nominatim();
+    
+    geocoder.geocode(fromInput, function(fromResults) {
+        console.log('FrAdd start marker (green)
+                    startMarker = L.marker([fromLatLng.lat, fromLatLng.lng], {
+                        icon: L.icon({
+                            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                            iconSize: [25, 41],
+                            iconAnchor: [12, 41],
+                            popupAnchor: [1, -34],
+                            shadowSize: [41, 41]
+                        })
+                    }).addTo(map);
+                    startMarker.bindPopup('<b>Start:</b> ' + fromInput);
+
+                    // Add end marker (red)
+                    endMarker = L.marker([toLatLng.lat, toLatLng.lng], {
+                        icon: L.icon({
+                            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                            iconSize: [25, 41],
+                            iconAnchor: [12, 41],
+                            popupAnchor: [1, -34],
+                            shadowSize: [41, 41]
+                        })
+                    }).addTo(map);
+                    endMarker.bindPopup('<b>Destination:</b> ' + toInput);
+
+                    console.log('Markers added to map');
+
+                    // Get route from OSRM
+                    var osrmUrl = 'https://router.project-osrm.org/route/v1/driving/' + 
+                                  fromLatLng.lng + ',' + fromLatLng.lat + ';' + 
+                                  toLatLng.lng + ',' + toLatLng.lat + 
+                                  '?overview=full&geometries=geojson';
+
+                    console.log('Fetching route from OSRM:', osrmUrl);
+
+                    fetch(osrmUrl)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('OSRM response:', data);
+                            
+                            if (data.code === 'Ok' && data.routes && data.routes.length > 0) {
+                                var route = data.routes[0];
+                                var coordinates = route.geometry.coordinates;
+                                
+                                // Convert coordinates from [lng, lat] to [lat, lng]
+                                var latlngs = coordinates.map(coord => [coord[1], coord[0]]);
+                                
+                                // Draw the route polyline
+                                routePolyline = L.polyline(latlngs, {
+                                    color: '#2563eb',
+                                    weight: 6,
+                                    opacity: 0.8
+                                }).addTo(map);
+                                
+                                console.log('Route polyline drawn with', latlngs.length, 'points');
+                                
+                                // Fit map to show the entire route
+                                map.fitBounds(routePolyline.getBounds(), { padding: [50, 50] });
+                                
+                                processRouteData(route, fromInput, toInput, outputPanel);
+                            } else {
+                                console.error('OSRM error:', data);
+                                outputPanel.innerHTML = '<div class="alert alert-danger">Could not find a route. Please try different locations.</div>';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Route fetch error:', error);
+                            outputPanel.innerHTML = '<div class="alert alert-danger">Error calculating route. Please try again.</div>';
+                        }  return marker;
+                        }
+ // Only show save button if user is logged in
+                        if (getUserId) {
+                            outputPanel.innerHTML += '<button type="button" class="btn-save" onclick="saveRoute()"><i class="bx bx-save"></i> Save Route</button>';
+                        }
+                        outputPanel.innerHTML += '</div>';
+                        
+                        console.log('Route details displayed successfully');
+                    });
+
+                    routingControl.on('routingerror', function(e) {
+                        console.error('Routing error:', e);
+                        outputPanel.innerHTML = '<div class="alert alert-danger">Error calculating route. Please try again.</div>';
+                    });
+
+                } else {
+                    alert('Destination address not found. Please try a different location.');
+                }
+            });
+        } else {
+            alert('Starting address not found. Please try a different location.');
+        }
+    });
+}
+
+// Function to get fare rate based on the transportation mode
+function getFareRate(transportationMode) {
+    switch (transportationMode) {
+        case 'bus':
+            return 13;
+        case 'jeepney':
+            return 15;
+        case 'driving':
+            return 15;
+        case 'all':
+            return 13;
+        default:
+            return 13;
+    }
+}
+
+// Function to get readable transport mode name
+function getTransportModeName(mode) {
+    switch (mode) {
+        case 'bus':
+            return 'BUS / JEEPNEY';
+        case 'jeepney':
+            return 'LRT / MRT / PNR';
+        case 'driving':
+            return 'MOTORCYCLE / TAXI / CAR';
+        case 'all':
+            return 'ALL MODES';
+        default:
+            return mode.toUpperCase();
+    }
+}
+
+async function saveRoute() {
+    var outputPanel = document.getElementById('output2');
+    outputPanel.innerHTML = '';
+
+    var formData = new FormData();
+    formData.append('userid', getUserId);
+    formData.append('start', document.getElementById('from').value);
+    formData.append('destination', document.getElementById('to').value);
+    formData.append('distance', getDistanceinkms);
+    formData.append('fare', getFare);
+    formData.append('transportmode', getTransportMode);
+    formData.append('duration', getDuration);
+    formData.append('routeid', 0);
+
+    var responsprocess route data and display details
+function processRouteData(route, fromInput, toInput, outputPanel) {
+    var selectedTransportation = document.querySelector('input[name="transportation"]:checked').value;
+    
+    // Get distance in kilometers
+    var distanceInKm = route.distance / 1000;
+    
+    // Get duration
+    var totalSeconds = route.duration;
+    var hours = Math.floor(totalSeconds / 3600);
+    var minutes = Math.floor((totalSeconds % 3600) / 60);
+    var durationText = hours > 0 ? hours + ' hr ' + minutes + ' min' : minutes + ' min';
+    
+    getDuration = durationText;
+
+    // Calculate fare
+    var fareRatePerKm = getFareRate(selectedTransportation);
+    var totalFare = Math.max(fareRatePerKm * distanceInKm, 13);
+
+    var isStudentSeniorPWD = confirm('Are you a student, senior citizen, or PWD (ok-yes, cancel-no)?');
+    if (isStudentSeniorPWD) {
+        totalFare *= 0.8; // 20% discount
+    }
+
+    getDistanceinkms = distanceInKm.toFixed(2);
+    getFare = totalFare.toFixed(2);
+
+    // Display route details
+    outputPanel.innerHTML = '<div class="route-details">';
+    outputPanel.innerHTML += '<h4><strong>ROUTE (' + getTransportModeName(selectedTransportation) + '):</strong></h4>';
+    outputPanel.innerHTML += '<p><strong>FROM:</strong> ' + fromInput + '</p>';
+    outputPanel.innerHTML += '<p><strong>TO:</strong> ' + toInput + '</p>';
+    outputPanel.innerHTML += '<p><strong>DISTANCE:</strong> ' + getDistanceinkms + ' km</p>';
+    outputPanel.innerHTML += '<p><strong>DURATION:</strong> ' + durationText + '</p>';
+    outputPanel.innerHTML += '<p><strong>FARE:</strong> PHP ' + getFare + '</p>';
+    outputPanel.innerHTML += '<p style="color: #2563eb; font-style: italic;"><i class="bx bx-info-circle"></i> Blue route line shown on map above</p>';
+    
+    // Only show save button if user is logged in
+    if (getUserId) {
+        outputPanel.innerHTML += '<button type="button" class="btn-save" onclick="saveRoute()"><i class="bx bx-save"></i> Save Route</button>';
+    }
+    outputPanel.innerHTML += '</div>';
+    
+    console.log('Route details displayed successfully');
+}
+
+// Function to e = await fetch('controllers/saveroute.php', {
+        method: 'POST',
+        mode: "cors",
+        body: formData
+    });
+
+    if (response.ok) {
+        outputPanel.innerHTML += '<br><strong class="alert alert-success">Route saved successfully</strong><br>';
+    } else {
+        outputPanel.innerHTML += '<br><strong class="alert alert-danger">Error: Information not saved</strong><br>';
+    }
+}
