@@ -160,7 +160,7 @@ $feedbackCount = $resultFeedbacks->fetch_assoc()["feedbackCount"];
             <li><a href="admin-users.php">Users</a></li>
             <li><a href="admin-feedback.php">Feedbacks</a></li>
             <li><a href="#">Fares</a></li>
-            <li><a href="logout.php">Logout</a></li>
+            <li><a href="../controllers/logout.php">Logout</a></li>
         </ul>
     </div>
     

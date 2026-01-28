@@ -7,14 +7,14 @@ session_start();
 
 // Check if the user is not logged in, redirect to login page
 if (!isset($_SESSION["user"])) {
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit();
 }
 
 $user = $_SESSION["user"];
 $userid = $_SESSION["id"];
 
-include "config.php";
+include "../config.php";
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($update_stmt->execute()) {
         // Redirect to the user list page after successful update
-        header("Location: admin-users.php");
+        header("Location: ../admin/admin-users.php");
         exit();
     } else {
         // Handle error if update fails
@@ -50,7 +50,7 @@ if (isset($_GET['userid'])) {
     $edit_user = $edit_result->fetch_assoc();
 } else {
     // If no user is selected for editing, redirect to user list page
-    header("Location: admin-users.php");
+    header("Location: ../admin/admin-users.php");
     exit();
 }
 ?>

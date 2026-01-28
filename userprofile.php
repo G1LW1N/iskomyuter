@@ -79,7 +79,7 @@ include "config.php";
             <li><a href="userprofile.php">Profile</a></li>
             <li><a href="settings.php">Settings</a></li>
             <li><a href="blogpost.php" >Iskomyuter.ph</a></li>
-            <li><a href="logout.php">Logout</a></li>
+            <li><a href="controllers/logout.php">Logout</a></li>
         </ul>
     </div>
     

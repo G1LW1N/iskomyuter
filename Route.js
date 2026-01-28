@@ -162,7 +162,7 @@ async function saveRoute() {
     formData.append('transportmode', getTransportMode); // Append transportation mode
     formData.append('duration', getDuration); // Append duration
 
-    var response = await fetch('saveroute.php', {
+    var response = await fetch('controllers/saveroute.php', {
         method: 'POST',
         mode: "cors",
         body: formData

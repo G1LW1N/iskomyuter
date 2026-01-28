@@ -14,7 +14,7 @@ if (!isset($_SESSION["user"])) {
 $user = $_SESSION["user"];
 $userid = $_SESSION["id"];
 
-include "config.php";
+include "../config.php";
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
@@ -31,7 +31,7 @@ if (isset($_GET['id'])) {
     }
 
     // Redirect back to admin-users.php after deleting the user
-    header("Location: admin-feedback.php");
+    header("Location: ../admin/admin-feedback.php");
     exit();
 }
 ?>

@@ -6,7 +6,7 @@ header('Access-Control-Allow-Methods: GET, POST');
 header("Access-Control-Allow-Headers: X-Requested-With");
 header("Access-Control-Allow-Private-Network: true");
 
-include("./config.php");
+include("../config.php");
 
 if (!isset($_POST["fare"])) {
     $msg = 'Complete information required before saving!';

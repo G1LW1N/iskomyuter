@@ -165,7 +165,7 @@ $result = $stmt->get_result();
             <!-- <li><a href="userprofile.php">Profile</a></li> -->
             <li><a href="profile.php">Profile</a></li>
             <li><a href="FirstPage.php" >Iskomyuter.ph</a></li>
-            <li><a href="logout.php">Logout</a></li>
+            <li><a href="controllers/logout.php">Logout</a></li>
         </ul>
     </div>
     
@@ -217,7 +217,7 @@ if (!isset($_SESSION["user"])) {
                                     <td>' . $row["transportmode"] . '</td>
                                     <td>' . $row["duration"] . '</td>
                                     <td>
-                                        <a class="delete" title="Delete" data-toggle="tooltip" onclick=location.href="deleteroute.php?routeid=' . $row["id"] . '" style="cursor: pointer;"><i class="material-icons">⌂</i></a>
+                                        <a class="delete" title="Delete" data-toggle="tooltip" onclick=location.href="controllers/deleteroute.php?routeid=' . $row["id"] . '" style="cursor: pointer;"><i class="material-icons">⌂</i></a>
                                     </td>
                                 </tr>';
                         }

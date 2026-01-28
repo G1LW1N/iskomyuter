@@ -163,7 +163,7 @@ $result = $stmt->get_result();
             <li><a href="admin-saved-routes.php">Saved Routes</a></li>
             <li><a href="admin-users.php">Users</a></li>
             <li><a href="admin-feedback.php">Feedbacks</a></li>
-            <li><a href="logout.php">Logout</a></li>
+            <li><a href="../controllers/logout.php">Logout</a></li>
         </ul>
     </div>
     
@@ -207,11 +207,11 @@ $result = $stmt->get_result();
                                     <td>' . $row["email"] . '</td>
                                     <td>' . $row["password"] . '</td>
                                     <td>
-                                        <a class="edit" title="Edit" data-toggle="tooltip" onclick=location.href="edituser.php?routeid=' . $row["id"] . '" style="cursor: pointer;">
+                                        <a class="edit" title="Edit" data-toggle="tooltip" onclick=location.href="../controllers/edituser.php?routeid=' . $row["id"] . '" style="cursor: pointer;">
                                         <img src="images/edit-icon.png" alt="Edit" width="20" height="20">   
                                         </a>
                                         
-                                        <a class="delete" title="Delete" data-toggle="tooltip" onclick=location.href="deleteuser.php?routeid=' . $row["id"] . '" style="cursor: pointer;">
+                                        <a class="delete" title="Delete" data-toggle="tooltip" onclick=location.href="../controllers/deleteuser.php?routeid=' . $row["id"] . '" style="cursor: pointer;">
                                         <img src="images/delete-icon.png" alt="Delete" width="20" height="20">
                                         </a>
                                     </td>

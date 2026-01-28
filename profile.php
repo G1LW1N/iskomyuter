@@ -194,7 +194,7 @@ $conn->close();
             <li><a href="profile.php">Profile</a></li>
             <!-- <li><a href="settings.php">Settings</a></li> -->
             <li><a href="FirstPage.php">Iskomyuter.ph</a></li>
-            <li><a href="logout.php">Logout</a></li>
+            <li><a href="controllers/logout.php">Logout</a></li>
         </ul>
     </div>
     

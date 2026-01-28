@@ -17,7 +17,7 @@ $userid = $_SESSION["id"];
 include "config.php";
 
 // Output Form Entries from the Database
-$sql = "SELECT id, name, email, message, created_at FROM feedback";
+$sql = "SELECT id, userid, start, destination, transportmode, distance, fare, duration, created_at FROM routes";
 $stmt = $conn->prepare($sql);
 
 // Bind parameters to the SQL statement
@@ -163,17 +163,17 @@ $result = $stmt->get_result();
             <li><a href="admin-saved-routes.php">Saved Routes</a></li>
             <li><a href="admin-users.php">Users</a></li>
             <li><a href="admin-feedback.php">Feedbacks</a></li>
-            <li><a href="logout.php">Logout</a></li>
+            <li><a href="../controllers/logout.php">Logout</a></li>
         </ul>
     </div>
     
     <?php
 
-    if (!isset($_SESSION["user"])) {
-        header("Location: login.php");
-    }
+if (!isset($_SESSION["user"])) {
+    header("Location: login.php");
+}
 
-    ?>
+?>
 
        
     <div class="content">
@@ -182,16 +182,21 @@ $result = $stmt->get_result();
                 <div class="table-title">
                     <div class="row">
                         <div class="col-sm-12">
-                            <h2 color="#007bff"><b>Iskomyuter User Feedbacks</b></h2>
+                            <h2 color="#007bff"><b>Iskomyuter Saved Routes</b></h2>
                         </div>
                     </div>
                 </div>
                 <table class="table table-bordered">
                     <thead color="#007bff">
                         <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Message</th>
+                            <th>Route ID</th>
+                            <th>User ID</th>
+                            <th>Start</th>
+                            <th>Destination</th>
+                            <th>Transport Mode</th>
+                            <th>Distance</th>
+                            <th>Fare</th>
+                            <th>Duration</th>
                             <th>Date & Time</th>
                             <th></th>
                         </tr>
@@ -200,12 +205,17 @@ $result = $stmt->get_result();
                         <?php
                         while ($row = mysqli_fetch_assoc($result)) {
                             echo '<tr>
-                                    <td>' . $row["name"] . '</td>
-                                    <td>' . $row["email"] . '</td>
-                                    <td>' . $row["message"] . '</td>
+                                    <td>' . $row["id"] . '</td>
+                                    <td>' . $row["userid"] . '</td>
+                                    <td>' . $row["start"] . '</td>
+                                    <td>' . $row["destination"] . '</td>
+                                    <td>' . $row["transportmode"] . '</td>
+                                    <td>' . $row["distance"] . ' km</td>
+                                    <td>₱ ' . $row["fare"] . '</td>
+                                    <td>' . $row["duration"] . '</td>
                                     <td>' . $row["created_at"] . '</td>
                                     <td>
-                                        <a class="delete" title="Delete" data-toggle="tooltip" onclick=location.href="deletefeedback.php?id=' . $row["id"] . '" style="cursor: pointer;"><i class="material-icons">delete</i></a>
+                                        <a class="delete" title="Delete" data-toggle="tooltip" onclick=location.href="admin-deleteroutes.php?routeid=' . $row["id"] . '" style="cursor: pointer;"><i class="material-icons">delete</i></a>
                                     </td>
                                 </tr>';
                         }
@@ -215,10 +225,16 @@ $result = $stmt->get_result();
                     </tbody>
                 </table>
             </div>
+            <!-- <div class="add-new-container" >
+                <button type="button" class="btn btn-info add-new"
+                onclick="location.href='Route.php'"><i class="fa fa-plus"></i> Add
+                New</button>
+            </div> -->
         </div>
     </div>
 
 
-    
+        
+    </div>
 </body>
 </html>
