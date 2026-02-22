@@ -192,6 +192,51 @@ $conn->close();
             font-size: 16px;
         }
 
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            min-width: 220px;
+            margin-top: 10px;
+            z-index: 999999;
+            display: none;
+        }
+
+        .dropdown-menu a {
+            display: flex !important;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 20px;
+            color: #333 !important;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            background: white;
+        }
+
+        .dropdown-menu a:first-child {
+            border-radius: 10px 10px 0 0;
+        }
+
+        .dropdown-menu a:last-child {
+            border-bottom: none;
+            border-radius: 0 0 10px 10px;
+            color: #f44336 !important;
+        }
+
+        .dropdown-menu a:hover {
+            background: #f8f9fa;
+            padding-left: 25px;
+        }
+
+        .dropdown-menu a i {
+            font-size: 18px;
+        }
+
         /* Main Content */
         .content {
             padding: 50px 6%;
@@ -554,10 +599,28 @@ $conn->close();
                 <li><a href="index.php#about">ABOUT US</a></li>
                 <li><a href="index.php#footer">CONTACT</a></li>
                 <li class="user-dropdown">
-                    <div class="user-menu-btn">
+                    <div class="user-menu-btn" onclick="toggleDropdown(event)">
                         <div class="user-avatar"><?php echo strtoupper(substr($_SESSION["user"], 0, 1)); ?></div>
                         <span class="user-name"><?php echo ucfirst($_SESSION["user"]); ?></span>
                         <i class='bx bx-chevron-down dropdown-icon'></i>
+                    </div>
+                    <div class="dropdown-menu" id="userDropdownMenu">
+                        <a href="profile.php">
+                            <i class='bx bx-user'></i>
+                            <span>My Profile</span>
+                        </a>
+                        <a href="index.php#saved-routes">
+                            <i class='bx bx-history'></i>
+                            <span>Commute History</span>
+                        </a>
+                        <a href="Route.php">
+                            <i class='bx bx-plus-circle'></i>
+                            <span>Add New Route</span>
+                        </a>
+                        <a href="controllers/logout.php">
+                            <i class='bx bx-log-out'></i>
+                            <span>Logout</span>
+                        </a>
                     </div>
                 </li>
             </ul>
@@ -693,6 +756,30 @@ $conn->close();
                 passwordField.type = "password";
             }
         }
+
+        // Toggle dropdown menu
+        function toggleDropdown(event) {
+            if (event) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+            
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                const currentDisplay = dropdown.style.display;
+                dropdown.style.display = currentDisplay === 'none' || currentDisplay === '' ? 'block' : 'none';
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userDropdown = document.querySelector('.user-dropdown');
+            const dropdown = document.getElementById('userDropdownMenu');
+            
+            if (dropdown && userDropdown && !userDropdown.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>

@@ -190,15 +190,16 @@ $result = $stmt->get_result();
         }
 
         th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             color: #fff;
             padding: 15px;
             text-align: left;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             white-space: nowrap;
+            border-bottom: 2px solid #5568d3;
         }
 
         td {

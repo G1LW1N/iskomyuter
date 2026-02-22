@@ -16,6 +16,34 @@ $userid = $_SESSION["id"];
 
 include "../config.php";
 
+// Handle user update via POST
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_user'])) {
+    $id = $_POST["user_id"];
+    $newName = $_POST["name"];
+    $newUsername = $_POST["username"];
+    $newEmail = $_POST["email"];
+    $newPassword = $_POST["password"];
+
+    if (!empty($newPassword)) {
+        // Update with new password
+        $update_sql = "UPDATE user SET name=?, username=?, email=?, password=? WHERE id=?";
+        $update_stmt = $conn->prepare($update_sql);
+        $update_stmt->bind_param("ssssi", $newName, $newUsername, $newEmail, $newPassword, $id);
+    } else {
+        // Update without changing password
+        $update_sql = "UPDATE user SET name=?, username=?, email=? WHERE id=?";
+        $update_stmt = $conn->prepare($update_sql);
+        $update_stmt->bind_param("sssi", $newName, $newUsername, $newEmail, $id);
+    }
+
+    if ($update_stmt->execute()) {
+        $successMessage = "User updated successfully!";
+    } else {
+        $errorMessage = "Error updating user.";
+    }
+    $update_stmt->close();
+}
+
 // Output Form Entries from the Database
 $sql = "SELECT id, name, username, email, password FROM user";
 $stmt = $conn->prepare($sql);
@@ -190,14 +218,15 @@ $result = $stmt->get_result();
         }
 
         th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             color: #fff;
             padding: 15px;
             text-align: left;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 14px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            border-bottom: 2px solid #5568d3;
         }
 
         td {
@@ -253,6 +282,177 @@ $result = $stmt->get_result();
             filter: brightness(0) invert(1);
         }
 
+        .action-btn i {
+            font-size: 18px;
+            color: white;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 25px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .close {
+            color: white;
+            font-size: 32px;
+            font-weight: 300;
+            cursor: pointer;
+            transition: all 0.3s;
+            line-height: 1;
+        }
+
+        .close:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #2c3e50;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group small {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-radius: 0 0 15px 15px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-modal {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-cancel {
+            background: #e8e8e8;
+            color: #333;
+        }
+
+        .btn-cancel:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-save-modal {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-save-modal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .alert {
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -305,6 +505,20 @@ $result = $stmt->get_result();
             </div>
         </div>
 
+        <?php if (isset($successMessage)): ?>
+        <div class="alert alert-success">
+            <i class='bx bx-check-circle'></i>
+            <span><?php echo $successMessage; ?></span>
+        </div>
+        <?php endif; ?>
+
+        <?php if (isset($errorMessage)): ?>
+        <div class="alert alert-error">
+            <i class='bx bx-error-circle'></i>
+            <span><?php echo $errorMessage; ?></span>
+        </div>
+        <?php endif; ?>
+
         <!-- Table Card -->
         <div class="table-card">
             <div class="table-header">
@@ -332,11 +546,12 @@ $result = $stmt->get_result();
                                     <td>' . htmlspecialchars($row["email"]) . '</td>
                                     <td>••••••••</td>
                                     <td>
-                                        <button class="action-btn edit-btn" onclick="location.href=\'../controllers/edituser.php?routeid=' . $row["id"] . '\'" title="Edit">
-                                            <img src="../images/edit-icon.png" alt="Edit">
+                                        <button class="action-btn edit-btn" onclick="openEditModal(' . $row["id"] . ', \'' . htmlspecialchars($row["username"], ENT_QUOTES) . '\', \'' . htmlspecialchars($row["name"], ENT_QUOTES) . '\', \'' . htmlspecialchars($row["email"], ENT_QUOTES) . '\')" title="Edit">
+                                            <i class=\'bx bx-edit\'></i>
                                         </button>
                                         <button class="action-btn delete-btn" onclick="if(confirm(\'Are you sure you want to delete this user?\')) location.href=\'../controllers/deleteuser.php?routeid=' . $row["id"] . '\'" title="Delete">
-                                            <img src="../images/delete-icon.png" alt="Delete">
+                                            <i class=\'bx bx-trash\'></i>
+                                        </button>
                                         </button>
                                     </td>
                                 </tr>';
@@ -349,5 +564,80 @@ $result = $stmt->get_result();
             </div>
         </div>
     </div>
+
+    <!-- Edit User Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit User</h2>
+                <span class="close" onclick="closeEditModal()">&times;</span>
+            </div>
+            <form method="POST" action="">
+                <div class="modal-body">
+                    <input type="hidden" name="update_user" value="1">
+                    <input type="hidden" name="user_id" id="edit_user_id">
+                    
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" name="username" id="edit_username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="name" id="edit_name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" id="edit_email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" name="password" id="edit_password" placeholder="Leave blank to keep current password">
+                        <small>Leave blank if you don't want to change the password</small>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal btn-cancel" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn-modal btn-save-modal">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Open edit modal
+        function openEditModal(id, username, name, email) {
+            document.getElementById('edit_user_id').value = id;
+            document.getElementById('edit_username').value = username;
+            document.getElementById('edit_name').value = name;
+            document.getElementById('edit_email').value = email;
+            document.getElementById('edit_password').value = '';
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        // Close edit modal
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target == modal) {
+                closeEditModal();
+            }
+        }
+
+        // Auto-hide success/error messages after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.display = 'none';
+            });
+        }, 5000);
+    </script>
 </body>
 </html>

@@ -41,8 +41,44 @@ $stmtFeedbacks = $conn->prepare($sqlFeedbacks);
 $stmtFeedbacks->execute();
 $resultFeedbacks = $stmtFeedbacks->get_result();
 $feedbackCount = $resultFeedbacks->fetch_assoc()["feedbackCount"];
-?>
 
+// Get daily route counts for last 7 days
+$routeTrendData = [];
+$routeTrendLabels = [];
+for ($i = 6; $i >= 0; $i--) {
+    $date = date('Y-m-d', strtotime("-$i days"));
+    $sqlRouteTrend = "SELECT COUNT(*) as count FROM routes WHERE DATE(created_at) = ?";
+    $stmtRouteTrend = $conn->prepare($sqlRouteTrend);
+    $stmtRouteTrend->bind_param("s", $date);
+    $stmtRouteTrend->execute();
+    $resultRouteTrend = $stmtRouteTrend->get_result();
+    $count = $resultRouteTrend->fetch_assoc()["count"];
+    $routeTrendData[] = $count;
+    $routeTrendLabels[] = date('M d', strtotime($date));
+}
+
+// Get feedback trend (last 7 days)
+$feedbackTrendData = [];
+for ($i = 6; $i >= 0; $i--) {
+    $date = date('Y-m-d', strtotime("-$i days"));
+    $sqlFeedbackTrend = "SELECT COUNT(*) as count FROM feedback WHERE DATE(created_at) = ?";
+    $stmtFeedbackTrend = $conn->prepare($sqlFeedbackTrend);
+    $stmtFeedbackTrend->bind_param("s", $date);
+    $stmtFeedbackTrend->execute();
+    $resultFeedbackTrend = $stmtFeedbackTrend->get_result();
+    $count = $resultFeedbackTrend->fetch_assoc()["count"];
+    $feedbackTrendData[] = $count;
+}
+
+// Get transport mode distribution
+$transportData = [];
+$transportLabels = [];
+$sqlTransport = "SELECT transportmode, COUNT(*) as count FROM routes GROUP BY transportmode";
+$resultTransport = $conn->query($sqlTransport);
+while ($row = $resultTransport->fetch_assoc()) {
+    $transportLabels[] = $row['transportmode'];
+    $transportData[] = $row['count'];
+}
 ?>
 
 
@@ -56,6 +92,7 @@ $feedbackCount = $resultFeedbacks->fetch_assoc()["feedbackCount"];
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>Admin Dashboard - Iskomyuter.ph</title>
 
     <style>
@@ -415,8 +452,60 @@ $feedbackCount = $resultFeedbacks->fetch_assoc()["feedbackCount"];
             color: #2c3e50;
         }
 
+        /* Charts Section */
+        .charts-section {
+            margin-top: 30px;
+        }
+
+        .charts-section h2 {
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .charts-section h2 i {
+            color: #667eea;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .chart-card h3 {
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+
             .sidebar {
                 width: 70px;
             }
@@ -542,6 +631,40 @@ $feedbackCount = $resultFeedbacks->fetch_assoc()["feedbackCount"];
             </div>
         </div>
 
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <h2>
+                <i class='bx bx-bar-chart-alt-2'></i>
+                Analytics & Trends
+            </h2>
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>Routes Activity (Last 7 Days)</h3>
+                    <div class="chart-container">
+                        <canvas id="routesChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Feedback Trends (Last 7 Days)</h3>
+                    <div class="chart-container">
+                        <canvas id="feedbackChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Transport Mode Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="transportChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Monthly Overview</h3>
+                    <div class="chart-container">
+                        <canvas id="overviewChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Quick Actions -->
         <div class="quick-actions">
             <h2>
@@ -590,5 +713,232 @@ $feedbackCount = $resultFeedbacks->fetch_assoc()["feedbackCount"];
             </div>
         </div>
     </div>
+
+    <script>
+        // Chart.js Configuration
+        const chartColors = {
+            purple: '#667eea',
+            blue: '#3498db',
+            green: '#2ecc71',
+            orange: '#f39c12',
+            red: '#e74c3c',
+            teal: '#1abc9c'
+        };
+
+        // Routes Activity Chart
+        const routesCtx = document.getElementById('routesChart').getContext('2d');
+        const routesChart = new Chart(routesCtx, {
+            type: 'line',
+            data: {
+                labels: <?php echo json_encode($routeTrendLabels); ?>,
+                datasets: [{
+                    label: 'Routes Created',
+                    data: <?php echo json_encode($routeTrendData); ?>,
+                    borderColor: chartColors.purple,
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: chartColors.purple,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: { size: 14 },
+                        bodyFont: { size: 13 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            font: { size: 11 }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: { size: 11 }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Feedback Trends Chart
+        const feedbackCtx = document.getElementById('feedbackChart').getContext('2d');
+        const feedbackChart = new Chart(feedbackCtx, {
+            type: 'line',
+            data: {
+                labels: <?php echo json_encode($routeTrendLabels); ?>,
+                datasets: [{
+                    label: 'Feedback Received',
+                    data: <?php echo json_encode($feedbackTrendData); ?>,
+                    borderColor: chartColors.green,
+                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: chartColors.green,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: { size: 14 },
+                        bodyFont: { size: 13 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            font: { size: 11 }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: { size: 11 }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Transport Mode Distribution Chart
+        const transportCtx = document.getElementById('transportChart').getContext('2d');
+        const transportChart = new Chart(transportCtx, {
+            type: 'doughnut',
+            data: {
+                labels: <?php echo json_encode($transportLabels); ?>,
+                datasets: [{
+                    data: <?php echo json_encode($transportData); ?>,
+                    backgroundColor: [
+                        chartColors.purple,
+                        chartColors.blue,
+                        chartColors.green,
+                        chartColors.orange,
+                        chartColors.teal
+                    ],
+                    borderWidth: 3,
+                    borderColor: '#fff',
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            font: { size: 12 },
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: { size: 14 },
+                        bodyFont: { size: 13 }
+                    }
+                }
+            }
+        });
+
+        // Monthly Overview Chart (Combining Users, Routes, Feedback)
+        const overviewCtx = document.getElementById('overviewChart').getContext('2d');
+        const overviewChart = new Chart(overviewCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Users', 'Routes', 'Feedbacks'],
+                datasets: [{
+                    label: 'Total Count',
+                    data: [<?php echo $userCount; ?>, <?php echo $routeCount; ?>, <?php echo $feedbackCount; ?>],
+                    backgroundColor: [
+                        chartColors.purple,
+                        chartColors.green,
+                        chartColors.orange
+                    ],
+                    borderRadius: 8,
+                    barThickness: 60
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        padding: 12,
+                        titleFont: { size: 14 },
+                        bodyFont: { size: 13 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: Math.max(1, Math.ceil(Math.max(<?php echo $userCount; ?>, <?php echo $routeCount; ?>, <?php echo $feedbackCount; ?>) / 10)),
+                            font: { size: 11 }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: { size: 12 }
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
 </body>
 </html>

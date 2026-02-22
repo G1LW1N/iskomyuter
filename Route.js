@@ -22,7 +22,6 @@ window.onload = function () {
     // Check if Leaflet is loaded
     if (typeof L === 'undefined') {
         console.error('Leaflet library not loaded!');
-        alert('Map library failed to load. Please refresh the page.');
         return;
     }
     
@@ -66,7 +65,6 @@ function calcRoute() {
     
     // Check if map exists
     if (!map) {
-        alert('Map not initialized. Please refresh the page.');
         console.error('Map is not initialized');
         return;
     }
@@ -95,6 +93,12 @@ function calcRoute() {
     }
     if (startMarker) map.removeLayer(startMarker);
     if (endMarker) map.removeLayer(endMarker);
+
+    // Hide save button until route is calculated
+    var saveButton = document.querySelector('.btn-save');
+    if (saveButton) {
+        saveButton.classList.remove('show');
+    }
 
     var outputPanel = document.getElementById('output');
     outputPanel.innerHTML = '<div class="calculating">Calculating route...</div>';
@@ -254,13 +258,22 @@ function processMultipleRoutes(routes, fromInput, toInput, outputPanel) {
     });
     
     html += '<p style="color: #666; font-style: italic; font-size: 0.9em;"><i class="bx bx-info-circle"></i> Different colored lines on the map show route alternatives</p>';
-    
-    if (getUserId) {
-        html += '<button type="button" class="btn-save" onclick="saveRoute()"><i class="bx bx-save"></i> Save Recommended Route</button>';
-    }
     html += '</div>';
     
     outputPanel.innerHTML = html;
+    
+    // Show the save button in the form
+    var saveButton = document.querySelector('.btn-save');
+    console.log('Save button element:', saveButton);
+    console.log('getUserId:', getUserId);
+    
+    if (saveButton) {
+        saveButton.classList.add('show');
+        console.log('Save button shown');
+    } else {
+        console.error('Save button not found!');
+    }
+    
     console.log('All routes displayed successfully');
 }
 

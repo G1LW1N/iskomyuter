@@ -67,27 +67,29 @@ $count_stmt->close();
             display: flex;
             align-items: center;
             gap: 10px;
-            background: #f44336;
-            padding: 8px 16px;
-            border-radius: 5px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 10px 18px;
+            border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s;
             border: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .user-menu-btn:hover {
-            background: #d32f2f;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
         }
 
         .user-avatar {
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #f44336;
+            color: #667eea;
             font-weight: 700;
             font-size: 14px;
         }
@@ -95,17 +97,12 @@ $count_stmt->close();
         .user-name {
             color: white;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .dropdown-icon {
             color: white;
-            font-size: 18px;
-            transition: transform 0.3s;
-        }
-
-        .user-dropdown.active .dropdown-icon {
-            transform: rotate(180deg);
+            font-size: 16px;
         }
 
         .dropdown-menu {
@@ -172,24 +169,20 @@ $count_stmt->close();
                             <span class="user-name"><?php echo ucfirst($user); ?></span>
                             <i class='bx bx-chevron-down dropdown-icon'></i>
                         </div>
-                        <div class="dropdown-menu" id="userDropdownMenu" style="position: absolute; top: 100%; right: 0; background: white; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); min-width: 220px; margin-top: 10px; z-index: 999999; display: none;">
-                            <a href="profile.php" style="display: flex; align-items: center; gap: 12px; padding: 15px 20px; color: #333; text-decoration: none; border-bottom: 1px solid #f0f0f0;">
+                        <div class="dropdown-menu" id="userDropdownMenu">
+                            <a href="profile.php">
                                 <i class='bx bx-user'></i>
                                 <span>My Profile</span>
                             </a>
-                            <a href="#saved-routes" style="display: flex; align-items: center; gap: 12px; padding: 15px 20px; color: #333; text-decoration: none; border-bottom: 1px solid #f0f0f0;">
+                            <a href="#saved-routes">
                                 <i class='bx bx-history'></i>
                                 <span>Commute History</span>
                             </a>
-                            <a href="profile.php" style="display: flex; align-items: center; gap: 12px; padding: 15px 20px; color: #333; text-decoration: none; border-bottom: 1px solid #f0f0f0;">
-                                <i class='bx bx-cog'></i>
-                                <span>Account Settings</span>
-                            </a>
-                            <a href="Route.php" style="display: flex; align-items: center; gap: 12px; padding: 15px 20px; color: #333; text-decoration: none; border-bottom: 1px solid #f0f0f0;">
+                            <a href="Route.php">
                                 <i class='bx bx-plus-circle'></i>
                                 <span>Add New Route</span>
                             </a>
-                            <a href="controllers/logout.php" style="display: flex; align-items: center; gap: 12px; padding: 15px 20px; color: #f44336; text-decoration: none;">
+                            <a href="controllers/logout.php">
                                 <i class='bx bx-log-out'></i>
                                 <span>Logout</span>
                             </a>
@@ -202,7 +195,7 @@ $count_stmt->close();
         <div class="text-box">
             <h1>Iskomyuter.ph</h1>
             <p>Navigate Your Journey with Ease<br>Your Ultimate Guide to Seamless Commutes!</p>
-            <a href="map.php" class="hero-btn">Get Directions</a>
+            <a href="<?php echo isset($_SESSION['user']) ? 'Route.php' : 'map.php'; ?>" class="hero-btn">Get Directions</a>
         </div>
     </section>
 
@@ -692,7 +685,7 @@ $count_stmt->close();
             const dropdown = document.getElementById('userDropdownMenu');
             if (dropdown) {
                 const currentDisplay = dropdown.style.display;
-                dropdown.style.display = currentDisplay === 'none' ? 'block' : 'none';
+                dropdown.style.display = currentDisplay === 'none' || currentDisplay === '' ? 'block' : 'none';
             }
         }
 

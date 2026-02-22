@@ -1,6 +1,12 @@
 <?php
 session_start();
 
+// Redirect logged-in users to Route.php
+if (isset($_SESSION["user"])) {
+    header("Location: Route.php");
+    exit();
+}
+
 // Initialize user variables
 $user = isset($_SESSION["user"]) ? $_SESSION["user"] : "";
 $userid = isset($_SESSION["id"]) ? $_SESSION["id"] : "";
