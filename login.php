@@ -130,7 +130,7 @@ if (isset($_POST["login"])) {
 
                     <div class="register-link">
                         <p>Don't have an account? <a href="register.php">Register</a></p>
-                        <p>Access the <a href="admin-login.php">ADMIN</a> portal</p>
+                        <p>Access the <a href="admin/admin-login.php">ADMIN</a> portal</p>
                     </div>
                 </form>
             </div>

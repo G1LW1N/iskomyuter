@@ -16,7 +16,7 @@ if (!isset($_SESSION["user"])) {
 $user = $_SESSION["user"];
 $userid = $_SESSION["id"];
 
-include "config.php";
+include "../config.php";
 
 if (isset($_GET['routeid'])) {
     $routeid = $_GET['routeid'];

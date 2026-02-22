@@ -245,28 +245,6 @@
                 </div>
             </div>
 
-            <div class="about-stats">
-                <div class="stat-item">
-                    <i class='bx bx-user'></i>
-                    <h3>10,000+</h3>
-                    <p>Active Users</p>
-                </div>
-                <div class="stat-item">
-                    <i class='bx bx-map'></i>
-                    <h3>50,000+</h3>
-                    <p>Routes Planned</p>
-                </div>
-                <div class="stat-item">
-                    <i class='bx bx-time'></i>
-                    <h3>2hrs</h3>
-                    <p>Avg. Time Saved</p>
-                </div>
-                <div class="stat-item">
-                    <i class='bx bx-happy'></i>
-                    <h3>95%</h3>
-                    <p>Satisfaction Rate</p>
-                </div>
-            </div>
         </div>
     </section>
 
