@@ -60,14 +60,14 @@ function validate($data) {
 <body>
     <section class="page-header">
         <nav class="nav">
-            <a href="FirstPage.php"><img src="images/iskomyuter.png" alt="Iskomyuter Logo"></a>
+            <a href="index.php"><img src="images/iskomyuter.png" alt="Iskomyuter Logo"></a>
             <div class="nav-links">
                 <ul>
-                    <li><a href="FirstPage.php">HOME</a></li>
+                    <li><a href="index.php">HOME</a></li>
                     <li><a href="map.php">MAP</a></li>
-                    <li><a href="FirstPage.php#blog">BLOG</a></li>
-                    <li><a href="FirstPage.php#about">ABOUT US</a></li>
-                    <li><a href="FirstPage.php#footer">CONTACT</a></li>
+                    <li><a href="index.php#blog">BLOG</a></li>
+                    <li><a href="index.php#about">ABOUT US</a></li>
+                    <li><a href="index.php#footer">CONTACT</a></li>
                     <li class="log"><a href="login.php">Log in</a></li>
                 </ul>
             </div>

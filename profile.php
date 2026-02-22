@@ -609,7 +609,7 @@ $conn->close();
                             <i class='bx bx-user'></i>
                             <span>My Profile</span>
                         </a>
-                        <a href="index.php#saved-routes">
+                        <a href="dashboard.php#saved-routes">
                             <i class='bx bx-history'></i>
                             <span>Commute History</span>
                         </a>

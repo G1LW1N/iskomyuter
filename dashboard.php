@@ -1,24 +1,156 @@
+<?php
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST');
+header("Access-Control-Allow-Headers: X-Requested-With");
+header("Access-Control-Allow-Private-Network: true");
+session_start();
+
+// Check if the user is not logged in, redirect to login page
+if (!isset($_SESSION["user"])) {
+    header("Location: login.php");
+    exit();
+}
+
+$user = $_SESSION["user"];
+$userid = $_SESSION["id"];
+
+include "config.php";
+
+// Output Form Entries from the Database
+$sql = "SELECT id, start, destination, distance, fare, transportmode, duration FROM routes WHERE userid = ?";
+$stmt = $conn->prepare($sql);
+
+// Bind parameters to the SQL statement
+$stmt->bind_param("s", $userid);
+
+// Execute the SQL statement
+$stmt->execute();
+
+// Get the result set
+$result = $stmt->get_result();
+
+// Get route count for stats
+$count_sql = "SELECT COUNT(*) as total FROM routes WHERE userid = ?";
+$count_stmt = $conn->prepare($count_sql);
+$count_stmt->bind_param("s", $userid);
+$count_stmt->execute();
+$count_result = $count_stmt->get_result();
+$route_count = $count_result->fetch_assoc()['total'];
+$count_stmt->close();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en" style="scroll-behavior: smooth;">
-
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Iskomyuter.ph - Your Ultimate Guide to Seamless Commutes in Metro Manila">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>Iskomyuter.ph - Navigate Your Journey with Ease</title>
-    <link rel="stylesheet" href="css/blog.css?v=3.5">
-    <link rel="stylesheet" href="css/AboutUs-Iskomyuter.css?v=3.5">
-    <link rel="stylesheet" href="css/contact.css?v=3.5">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <title>Dashboard - Iskomyuter.ph</title>
+    <link rel="stylesheet" href="css/blog.css?v=3.5">
+    <link rel="stylesheet" href="css/AboutUs-Iskomyuter.css?v=3.5">
+    <link rel="stylesheet" href="css/contact.css?v=3.5">
+
+    <style>
+        /* User Dropdown Styles Only */
+        .user-dropdown {
+            position: relative;
+            z-index: 10000;
+        }
+
+        .user-menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .user-menu-btn:hover {
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .user-name {
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .dropdown-icon {
+            color: white;
+            font-size: 16px;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            min-width: 220px;
+            margin-top: 10px;
+            z-index: 999999;
+            display: none;
+        }
+
+        .dropdown-menu a {
+            display: flex !important;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 20px;
+            color: #333 !important;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            background: white;
+        }
+
+        .dropdown-menu a:first-child {
+            border-radius: 10px 10px 0 0;
+        }
+
+        .dropdown-menu a:last-child {
+            border-bottom: none;
+            border-radius: 0 0 10px 10px;
+            color: #f44336 !important;
+        }
+
+        .dropdown-menu a:hover {
+            background: #f8f9fa;
+            padding-left: 25px;
+        }
+
+        .dropdown-menu a i {
+            font-size: 18px;
+        }
+    </style>
 </head>
-
-
 <body>
     <!-- Header Section -->
     <section class="header" id="home">
@@ -31,7 +163,31 @@
                     <li><a href="#blog">BLOG</a></li>
                     <li><a href="#about">ABOUT US</a></li>
                     <li><a href="#footer">CONTACT</a></li>
-                    <li class="log"><a href="login.php">Log in</a></li>
+                    <li class="user-dropdown">
+                        <div class="user-menu-btn" onclick="toggleDropdown(event)">
+                            <div class="user-avatar"><?php echo strtoupper(substr($user, 0, 1)); ?></div>
+                            <span class="user-name"><?php echo ucfirst($user); ?></span>
+                            <i class='bx bx-chevron-down dropdown-icon'></i>
+                        </div>
+                        <div class="dropdown-menu" id="userDropdownMenu">
+                            <a href="profile.php">
+                                <i class='bx bx-user'></i>
+                                <span>My Profile</span>
+                            </a>
+                            <a href="#saved-routes">
+                                <i class='bx bx-history'></i>
+                                <span>Commute History</span>
+                            </a>
+                            <a href="Route.php">
+                                <i class='bx bx-plus-circle'></i>
+                                <span>Add New Route</span>
+                            </a>
+                            <a href="controllers/logout.php">
+                                <i class='bx bx-log-out'></i>
+                                <span>Logout</span>
+                            </a>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -39,7 +195,7 @@
         <div class="text-box">
             <h1>Iskomyuter.ph</h1>
             <p>Navigate Your Journey with Ease<br>Your Ultimate Guide to Seamless Commutes!</p>
-            <a href="map.php" class="hero-btn">Get Directions</a>
+            <a href="<?php echo isset($_SESSION['user']) ? 'Route.php' : 'map.php'; ?>" class="hero-btn">Get Directions</a>
         </div>
     </section>
 
@@ -183,36 +339,204 @@
         </div>
     </section>
 
-    <script>
-        function openTab(evt, tabName) {
-            var i, tabContent, tabBtn;
-            
-            // Hide all tab content
-            tabContent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabContent.length; i++) {
-                tabContent[i].classList.remove("active");
-            }
-            
-            // Remove active class from all buttons
-            tabBtn = document.getElementsByClassName("tab-btn");
-            for (i = 0; i < tabBtn.length; i++) {
-                tabBtn[i].classList.remove("active");
-            }
-            
-            // Show current tab and mark button as active
-            document.getElementById(tabName).classList.add("active");
-            evt.currentTarget.classList.add("active");
+    <!--Your Saved Routes Section-->
+    <section class="saved-routes" id="saved-routes">
+        <div class="routes-container">
+            <h1>Your Saved Routes</h1>
+            <p class="routes-subtitle">Track and manage all your commute history</p>
+
+            <?php if ($route_count > 0): ?>
+            <div class="routes-table-wrapper">
+                <table class="routes-table-modern">
+                    <thead>
+                        <tr>
+                            <th><i class='bx bx-map-pin'></i> Start Location</th>
+                            <th><i class='bx bx-target-lock'></i> Destination</th>
+                            <th><i class='bx bx-ruler'></i> Distance</th>
+                            <th><i class='bx bx-money'></i> Fare</th>
+                            <th><i class='bx bx-bus'></i> Transport</th>
+                            <th><i class='bx bx-time'></i> Duration</th>
+                            <th><i class='bx bx-cog'></i> Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        mysqli_data_seek($result, 0);
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            echo '<tr>
+                                    <td><strong>' . htmlspecialchars($row["start"]) . '</strong></td>
+                                    <td><strong>' . htmlspecialchars($row["destination"]) . '</strong></td>
+                                    <td>' . htmlspecialchars($row["distance"]) . ' km</td>
+                                    <td>₱ ' . number_format($row["fare"], 2) . '</td>
+                                    <td><span class="transport-badge">' . htmlspecialchars($row["transportmode"]) . '</span></td>
+                                    <td>' . htmlspecialchars($row["duration"]) . '</td>
+                                    <td>
+                                        <button class="delete-route-btn" onclick="deleteRoute(' . $row["id"] . ')">
+                                            <i class="bx bx-trash"></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>';
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="add-route-section">
+                <a href="Route.php" class="hero-btn">
+                    <i class='bx bx-plus-circle'></i> Plan New Route
+                </a>
+            </div>
+            <?php else: ?>
+            <div class="no-routes">
+                <i class='bx bx-map'></i>
+                <h3>No routes saved yet</h3>
+                <p>Start planning your commute and save your favorite routes!</p>
+                <a href="Route.php" class="hero-btn">Plan Your First Route</a>
+            </div>
+            <?php endif; ?>
+        </div>
+    </section>
+
+    <style>
+        /* Saved Routes Section Styles */
+        .saved-routes {
+            padding: 80px 6%;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         }
-    </script>
+
+        .routes-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .routes-container h1 {
+            text-align: center;
+            font-size: 42px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .routes-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .routes-table-wrapper {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        .routes-table-modern {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .routes-table-modern thead {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .routes-table-modern thead th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .routes-table-modern thead th:first-child {
+            border-radius: 10px 0 0 0;
+        }
+
+        .routes-table-modern thead th:last-child {
+            border-radius: 0 10px 0 0;
+        }
+
+        .routes-table-modern tbody tr {
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s;
+        }
+
+        .routes-table-modern tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .routes-table-modern tbody td {
+            padding: 15px;
+            color: #333;
+        }
+
+        .transport-badge {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .delete-route-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .delete-route-btn:hover {
+            background: #d32f2f;
+            transform: scale(1.05);
+        }
+
+        .add-route-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .no-routes {
+            text-align: center;
+            padding: 80px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .no-routes i {
+            font-size: 80px;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .no-routes h3 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .no-routes p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+    </style>
 
     <!--call to action-->
     <section class="cta">
         <h1>
-            Start Your Journey with Iskomyuter.ph
+            Continue Your Journey with Iskomyuter.ph
         </h1>
-        <a href="login.php" class="hero-btn"> LOG IN</a>
+        <a href="map.php" class="hero-btn">PLAN NEW ROUTE</a>
     </section>
-
 
     <section id="about" class="about-section">
         <div class="about-container">
@@ -245,6 +569,28 @@
                 </div>
             </div>
 
+            <div class="about-stats">
+                <div class="stat-item">
+                    <i class='bx bx-user'></i>
+                    <h3>10,000+</h3>
+                    <p>Active Users</p>
+                </div>
+                <div class="stat-item">
+                    <i class='bx bx-map'></i>
+                    <h3>50,000+</h3>
+                    <p>Routes Planned</p>
+                </div>
+                <div class="stat-item">
+                    <i class='bx bx-time'></i>
+                    <h3>2hrs</h3>
+                    <p>Avg. Time Saved</p>
+                </div>
+                <div class="stat-item">
+                    <i class='bx bx-happy'></i>
+                    <h3>95%</h3>
+                    <p>Satisfaction Rate</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -308,6 +654,58 @@
     </button>
 
     <script>
+        // Tab switching function
+        function openTab(evt, tabName) {
+            var i, tabContent, tabBtn;
+            
+            // Hide all tab content
+            tabContent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabContent.length; i++) {
+                tabContent[i].classList.remove("active");
+            }
+            
+            // Remove active class from all buttons
+            tabBtn = document.getElementsByClassName("tab-btn");
+            for (i = 0; i < tabBtn.length; i++) {
+                tabBtn[i].classList.remove("active");
+            }
+            
+            // Show current tab and mark button as active
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Toggle dropdown menu
+        function toggleDropdown(event) {
+            if (event) {
+                event.stopPropagation();
+                event.preventDefault();
+            }
+            
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                const currentDisplay = dropdown.style.display;
+                dropdown.style.display = currentDisplay === 'none' || currentDisplay === '' ? 'block' : 'none';
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userDropdown = document.querySelector('.user-dropdown');
+            const dropdown = document.getElementById('userDropdownMenu');
+            
+            if (dropdown && userDropdown && !userDropdown.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+
+        // Delete route function
+        function deleteRoute(routeId) {
+            if (confirm('Are you sure you want to delete this route?')) {
+                window.location.href = 'controllers/deleteroute.php?routeid=' + routeId;
+            }
+        }
+
         // Show/hide scroll to top button
         window.addEventListener('scroll', function() {
             const scrollBtn = document.getElementById('scrollToTop');
@@ -326,7 +724,9 @@
             });
         }
     </script>
-
 </body>
-
 </html>
+<?php
+$stmt->close();
+$conn->close();
+?>

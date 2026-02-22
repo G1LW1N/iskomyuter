@@ -363,7 +363,7 @@ $userid = isset($_SESSION["id"]) ? $_SESSION["id"] : null;
         <div class="route-header">
             <h1><i class='bx bx-navigation'></i> Route Planner</h1>
             <div class="header-actions">
-                <a href="index.php" class="btn-back">
+                <a href="dashboard.php" class="btn-back">
                     <i class='bx bx-arrow-back'></i> Back to Dashboard
                 </a>
             </div>

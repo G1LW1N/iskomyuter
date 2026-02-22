@@ -4,7 +4,7 @@ session_start();
 
 // Check if the user is already logged in, redirect to dashboard if true
 if (isset($_SESSION["user"])) {
-    header("Location: index.php");
+    header("Location: dashboard.php");
     exit();
 }
 
@@ -60,7 +60,7 @@ if (isset($_POST["login"])) {
             $_SESSION["id"] = $user["id"];
 
             // Redirect to the dashboard
-            header("Location: index.php");
+            header("Location: dashboard.php");
             exit();
         } else {
             // Display an error message if the password doesn't match
@@ -102,10 +102,10 @@ if (isset($_POST["login"])) {
 <body>
     <section class="login-header">
         <div class="auth-nav">
-            <a href="FirstPage.php" class="logo-link">
+            <a href="index.php" class="logo-link">
                 <img src="images/iskomyuter.png" alt="Iskomyuter Logo">
             </a>
-            <a href="FirstPage.php" class="back-home">
+            <a href="index.php" class="back-home">
                 <i class='bx bx-home-alt'></i>
                 <span>Back to Home</span>
             </a>

@@ -318,10 +318,10 @@ if (isset($_POST["login"])) {
 <body>
     <section class="login-header">
         <div class="auth-nav">
-            <a href="../FirstPage.php" class="logo-link">
-                <img src="../images/iskomyuter.png" alt="Iskomyuter Logo">
+            <a href="../index.php" class="logo-link">
+                <img src="images/iskomyuter.png" alt="Iskomyuter Logo">
             </a>
-            <a href="../FirstPage.php" class="back-home">
+            <a href="../index.php" class="back-home">
                 <i class='bx bx-home-alt'></i>
                 <span>Back to Home</span>
             </a>

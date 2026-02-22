@@ -39,14 +39,14 @@ $userid = isset($_SESSION["id"]) ? $_SESSION["id"] : "";
 <body>
     <section class="map-header">
         <nav class="nav">
-            <a href="FirstPage.php"><img src="images/iskomyuter.png" alt="Iskomyuter Logo"></a>
+            <a href="index.php"><img src="images/iskomyuter.png" alt="Iskomyuter Logo"></a>
             <div class="nav-links">
                 <ul>
-                    <li><a href="FirstPage.php">HOME</a></li>
+                    <li><a href="index.php">HOME</a></li>
                     <li><a href="map.php">MAP</a></li>
-                    <!-- <li><a href="FirstPage.php#blog">BLOG</a></li>
-                    <li><a href="FirstPage.php#about">ABOUT US</a></li>
-                    <li><a href="FirstPage.php#footer">CONTACT</a></li> -->
+                    <!-- <li><a href="index.php#blog">BLOG</a></li>
+                    <li><a href="index.php#about">ABOUT US</a></li>
+                    <li><a href="index.php#footer">CONTACT</a></li> -->
                     <li class="log"><a href="login.php">Log in</a></li>
                 </ul>
             </div>
@@ -117,7 +117,7 @@ $userid = isset($_SESSION["id"]) ? $_SESSION["id"] : "";
                         <button type="button" class="btn-calculate" onclick="calcRoute()">
                             <i class='bx bx-navigation'></i> Calculate Route
                         </button>
-                        <button type="button" class="btn-back" onclick="location.href='FirstPage.php'">
+                        <button type="button" class="btn-back" onclick="location.href='index.php'">
                             <i class='bx bx-arrow-back'></i> Back to Home
                         </button>
                     </div>

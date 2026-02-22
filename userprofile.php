@@ -75,7 +75,7 @@ include "config.php";
 <body>
     <div class="sidebar">
         <ul>
-        <li><a href="index.php">Dashboard</a></li>
+        <li><a href="dashboard.php">Dashboard</a></li>
             <li><a href="userprofile.php">Profile</a></li>
             <li><a href="settings.php">Settings</a></li>
             <li><a href="blogpost.php" >Iskomyuter.ph</a></li>

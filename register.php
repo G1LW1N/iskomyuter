@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (isset($_SESSION["user"])) {
-    header("Location: index.php");
+    header("Location: dashboard.php");
 }
 ?>
 <!DOCTYPE html>
@@ -22,10 +22,10 @@ if (isset($_SESSION["user"])) {
 <body>
     <section class="register-header">
         <div class="auth-nav">
-            <a href="FirstPage.php" class="logo-link">
+            <a href="index.php" class="logo-link">
                 <img src="images/iskomyuter.png" alt="Iskomyuter Logo">
             </a>
-            <a href="FirstPage.php" class="back-home">
+            <a href="index.php" class="back-home">
                 <i class='bx bx-home-alt'></i>
                 <span>Back to Home</span>
             </a>
