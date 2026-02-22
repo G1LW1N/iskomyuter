@@ -5,7 +5,7 @@
 // $dbPassword = "";
 // $dbName = "iskomyuter";
 
-$servername = "localhost";
+$servername = "sql301.infinityfree.com";
 $username = "if0_41219056";
 $password = "IskomyuterWeb01";
 $dbName = "if0_41219056_iskomyuter";
